@@ -1,0 +1,44 @@
+<button class="button" onclick="downloadCSV()">Download CSV</button>
+    
+    {% if tables %}
+        <!-- The table will be rendered as HTML, including links -->
+        {{ tables[0]|safe }}
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    
+    <p><a href="/" class="button">Go Back</a></p>
+
+    <script>
+        function downloadCSV() {
+            // Get the table element
+            var table = document.querySelector('.data');
+            var rows = table.querySelectorAll('tr');
+            var csv = [];
+            
+            // Loop through the rows
+            rows.forEach(function(row) {
+                var cols = row.querySelectorAll('td, th');
+                var rowData = [];
+                
+                // Loop through the columns and collect cell data
+                cols.forEach(function(col) {
+                    // If the cell has an anchor tag, get the href value
+                    if (col.querySelector('a')) {
+                        rowData.push('"' + col.querySelector('a').href + '"');  // Add href value for links
+                    } else {
+                        rowData.push('"' + col.innerText.replace(/"/g, '""') + '"');  // Normal text
+                    }
+                });
+                
+                csv.push(rowData.join(','));  // Join columns with commas
+            });
+            
+            // Create a CSV file from the data
+            var csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(csvFile);
+            link.download = 'job_results.csv';
+            link.click();
+        }
+    </script>

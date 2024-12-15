@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remote Job Results</title>
+  <style>
+    /* Reusing styles from the home template */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    nav {
+      background-color: #333;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 15px;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-links a:hover {
+      background-color: #575757;
+    }
+
+    .search-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .search-bar button {
+      padding: 8px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 16px;
+    }
+
+    .search-bar button:hover {
+      background-color: #45a049;
+    }
+
+    /* Main content area for results */
+    .main-content {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .main-content h2 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    /* Table Styles */
+    .data {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .data th, .data td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .data th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .data tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .data tr:hover {
+      background-color: #ddd;
+    }
+
+    /* Button Styles */
+    .button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      background-color: #45a049;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <img src="https://via.placeholder.com/150x50.png?text=Remote+Easy" alt="Remote Easy Logo">
+    </div>
+    <div class="nav-links">
+      <a href="http://127.0.0.1:5000/">Home</a>
+      <a href="https://www.linkedin.com/in/hyderghauri">LinkedIn</a>
+    </div>
+    <div class="search-bar">
+      <form action="/fetch_jobs">
+        <input type="text" placeholder="Search jobs..." name="search">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Latest Remote Job Listings</h2>
+    
+
+    <!-- Button to download CSV -->
+    <button class="button" onclick="downloadCSV()">Download CSV</button>
+    <h3 id="row-count">Total Job Listings: 0</h3>
+
+    
+    {% if tables %}
+        <!-- The table will be rendered as HTML, including links -->
+        {{ tables[0]|safe }}
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    
+    <p><a href="/" class="button">Go Back</a></p>
+
+    <script>
+        function downloadCSV() {
+            // Get the table element
+            var table = document.querySelector('.data');
+            var rows = table.querySelectorAll('tr');
+            var csv = [];
+            
+            // Loop through the rows
+            rows.forEach(function(row) {
+                var cols = row.querySelectorAll('td, th');
+                var rowData = [];
+                
+                // Loop through the columns and collect cell data
+                cols.forEach(function(col) {
+                    // If the cell has an anchor tag, get the href value
+                    if (col.querySelector('a')) {
+                        rowData.push('"' + col.querySelector('a').href + '"');  // Add href value for links
+                    } else {
+                        rowData.push('"' + col.innerText.replace(/"/g, '""') + '"');  // Normal text
+                    }
+                });
+                
+                csv.push(rowData.join(','));  // Join columns with commas
+            });
+            
+            // Create a CSV file from the data
+            var csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(csvFile);
+            link.download = 'job_results.csv';
+            link.click();
+        }
+        // Function to update the row count
+        function updateRowCount() {
+            var table = document.querySelector('.data'); // Get the table
+            if (table) {
+                var rows = table.querySelectorAll('tr'); // Count all rows
+                var rowCount = rows.length - 1; // Subtract 1 to exclude the header row
+                document.getElementById('row-count').innerText = `Total Job Listings: ${rowCount}`;
+            }
+        }
+
+        // Call the function when the page loads
+        window.onload = function() {
+            updateRowCount();
+        };
+    </script>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Remote Job Search. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
