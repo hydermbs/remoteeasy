@@ -15,8 +15,7 @@ app = Flask(__name__)
 
 # Configure the logging settings
 logging.basicConfig(
-    stream = sys.stdout,
-    filename='process_log.txt',  # Log file name
+    stream = sys.stdout,  # Log file name
     level=logging.INFO,          # Default log level
     format='%(asctime)s - %(levelname)s - %(message)s'  # Log message format
 )
