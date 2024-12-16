@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, jsonify
+from flask_cors import CORS,cross_origin
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
@@ -215,10 +216,12 @@ def convert_to_df(data):
 
 
 @app.route('/')
+@cross_origin()
 def search_page():
     return render_template('index.html')
 
 @app.route('/fetch_jobs', methods=['GET'])
+@cross_origin()
 def fetch_jobs():
     search = request.args.get('search', '')
     data = fetch_all(search)
