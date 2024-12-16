@@ -8,12 +8,14 @@ import threading
 import logging
 from datetime import datetime
 import random
+import sys
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Configure the logging settings
 logging.basicConfig(
+    stream = sys.stdout,
     filename='process_log.txt',  # Log file name
     level=logging.INFO,          # Default log level
     format='%(asctime)s - %(levelname)s - %(message)s'  # Log message format
