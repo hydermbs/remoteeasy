@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, jsonify
+from flask_cors import CORS,cross_origin
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
@@ -7,13 +8,14 @@ import threading
 import logging
 from datetime import datetime
 import random
+import sys
 
 # Initialize Flask app
 app = Flask(__name__)
 
 # Configure the logging settings
 logging.basicConfig(
-    filename='process_log.txt',  # Log file name
+    stream = sys.stdout,  # Log file name
     level=logging.INFO,          # Default log level
     format='%(asctime)s - %(levelname)s - %(message)s'  # Log message format
 )
@@ -215,10 +217,12 @@ def convert_to_df(data):
 
 
 @app.route('/')
+@cross_origin()
 def search_page():
     return render_template('index.html')
 
 @app.route('/fetch_jobs', methods=['GET'])
+@cross_origin()
 def fetch_jobs():
     search = request.args.get('search', '')
     data = fetch_all(search)
@@ -230,4 +234,4 @@ def fetch_jobs():
         titles=filtered.columns.values
     )
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
