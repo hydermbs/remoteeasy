@@ -61,9 +61,6 @@ The app is hosted on AWS (EC2 instance) and is accessible via HTTP.
 ## Feedback  
 Your feedback and suggestions are invaluable! Feel free to open an issue or submit a pull request for improvements.  
 
-## License  
-This project is licensed under the MIT License. See the LICENSE file for details.  
-
 ---  
 
 Let’s simplify remote job hunting! 🌍💼  
