@@ -1,4 +1,4 @@
-# Remote Job Finder  
+# Remote Easy 
 
 A simple Flask application designed to help you find remote jobs by extracting data from popular job boards. The application displays only the latest relevant jobs based on your specified keywords, allowing you to save time and focus on what matters—finding your dream remote job!  
 
