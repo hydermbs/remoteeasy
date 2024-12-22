@@ -27,8 +27,8 @@ The app is hosted on AWS (EC2 instance) and is accessible via HTTP.
 ## Installation  
 1. Clone the repository:  
    ```bash  
-   git clone https://github.com/yourusername/remote-job-finder.git  
-   cd remote-job-finder  
+   git clone https://github.com/hydermbs/remoteeasy.git  
+   cd remoteeasy 
    ```  
 
 2. Install dependencies:  
